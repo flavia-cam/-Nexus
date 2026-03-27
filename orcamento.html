@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento • NEXUS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0a0a0f]">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="font-['Orbitron'] text-3xl text-[#00ffff]">Orçamento</h1>
+                <p class="text-[#8a8aaa] mt-2">Controle seus limites por categoria</p>
+            </div>
+            <button onclick="abrirModalOrcamento()" class="cyber-button px-6 py-3">+ NOVO ORÇAMENTO</button>
+        </div>
+        <div id="orcamentosList" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+    </div>
+    
+    <div id="orcamentoModal" class="modal fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="cyber-panel p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-['Orbitron'] text-[#00ffff]">Novo Orçamento</h3>
+                <button onclick="fecharModalOrcamento()" class="text-[#8a8aaa] hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="orcamentoForm" onsubmit="salvarOrcamento(event)">
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Categoria</label>
+                    <select id="orcamentoCategoria" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required></select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Limite Mensal (R$)</label>
+                    <input type="number" id="orcamentoLimite" step="0.01" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Mês</label>
+                    <input type="month" id="orcamentoMes" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <button type="submit" class="cyber-button w-full py-3">SALVAR ORÇAMENTO</button>
+            </form>
+        </div>
+    </div>
+    
+   link
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Dashboard • NEXUS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            .cyber-card {
+                padding: 12px !important;
+            }
+            .cyber-card .font-['Orbitron'] {
+                font-size: 1.2rem !important;
+            }
+            .cyber-card .text-sm {
+                font-size: 10px !important;
+            }
+            .cyber-card .text-2xl {
+                font-size: 1.1rem !important;
+            }
+            h1.font-['Orbitron'] {
+                font-size: 1.5rem !important;
+            }
+            .p-6 {
+                padding: 1rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#0a0a0f]">
+    <div class="p-4 md:p-6">
+        <div class="mb-4 md:mb-6">
+            <h1 class="font-['Orbitron'] text-2xl md:text-3xl text-[#00ffff]">Dashboard</h1>
+            <p class="text-[#8a8aaa] text-sm md:text-base mt-1 md:mt-2">Visão geral do seu universo financeiro</p>
+        </div>
+        
+        <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6">
+            <div class="cyber-card p-3 md:p-6">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <p class="text-[#8a8aaa] text-xs md:text-sm">Saldo Total</p>
+                        <p class="font-['Orbitron'] text-base md:text-2xl text-[#00ffff] mt-1 md:mt-2" id="dashboardSaldo">R$ 0,00</p>
+                    </div>
+                    <span class="text-xl md:text-2xl">💰</span>
+                </div>
+            </div>
+            <div class="cyber-card p-3 md:p-6">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <p class="text-[#8a8aaa] text-xs md:text-sm">Receitas (Mês)</p>
+                        <p class="font-['Orbitron'] text-base md:text-2xl text-green-400 mt-1 md:mt-2" id="dashboardReceitas">R$ 0,00</p>
+                    </div>
+                    <span class="text-xl md:text-2xl">📈</span>
+                </div>
+            </div>
+            <div class="cyber-card p-3 md:p-6">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <p class="text-[#8a8aaa] text-xs md:text-sm">Despesas (Mês)</p>
+                        <p class="font-['Orbitron'] text-base md:text-2xl text-red-400 mt-1 md:mt-2" id="dashboardDespesas">R$ 0,00</p>
+                    </div>
+                    <span class="text-xl md:text-2xl">📉</span>
+                </div>
+            </div>
+            <div class="cyber-card p-3 md:p-6">
+                <div class="flex justify-between items-start">
+                    <div class="flex-1">
+                        <p class="text-[#8a8aaa] text-xs md:text-sm">Economia</p>
+                        <p class="font-['Orbitron'] text-base md:text-2xl text-[#8a2be2] mt-1 md:mt-2" id="dashboardEconomia">R$ 0,00</p>
+                    </div>
+                    <span class="text-xl md:text-2xl">⚡</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
+            <div class="cyber-panel p-4 md:p-6">
+                <h3 class="font-['Orbitron'] text-sm md:text-base text-[#00ffff] mb-3 md:mb-4">Evolução Mensal</h3>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="dashboardEvolucaoChart"></canvas>
+                </div>
+            </div>
+            <div class="cyber-panel p-4 md:p-6">
+                <h3 class="font-['Orbitron'] text-sm md:text-base text-[#00ffff] mb-3 md:mb-4">Despesas por Categoria</h3>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="dashboardCategoriasChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cyber-panel p-4 md:p-6">
+            <div class="flex justify-between items-center mb-3 md:mb-4">
+                <h3 class="font-['Orbitron'] text-sm md:text-base text-[#00ffff]">Últimas Transações</h3>
+                <a href="transacoes.html" target="_parent" class="text-[#8a2be2] hover:text-[#00ffff] text-xs md:text-sm transition">Ver todas →</a>
+            </div>
+            <div class="table-container overflow-x-auto">
+                <table class="w-full min-w-[400px]">
+                    <thead>
+                        <tr class="border-b border-[rgba(138,43,226,0.3)]">
+                            <th class="text-left py-2 md:py-3 text-xs md:text-sm text-[#8a8aaa]">Data</th>
+                            <th class="text-left py-2 md:py-3 text-xs md:text-sm text-[#8a8aaa]">Descrição</th>
+                            <th class="text-left py-2 md:py-3 text-xs md:text-sm text-[#8a8aaa]">Categoria</th>
+                            <th class="text-right py-2 md:py-3 text-xs md:text-sm text-[#8a8aaa]">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboardTransacoes"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

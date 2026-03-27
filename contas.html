@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contas • NEXUS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0a0a0f]">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="font-['Orbitron'] text-3xl text-[#00ffff]">Contas & Cartões</h1>
+                <p class="text-[#8a8aaa] mt-2">Gerencie suas contas bancárias e cartões</p>
+            </div>
+            <button onclick="abrirModalConta()" class="cyber-button px-6 py-3">+ NOVA CONTA</button>
+        </div>
+        
+        <div class="cyber-panel p-6 mb-6">
+            <h3 class="font-['Orbitron'] text-[#00ffff] mb-4">Saldo Total</h3>
+            <p class="font-['Orbitron'] text-4xl text-[#8a2be2]" id="saldoTotalContas">R$ 0,00</p>
+        </div>
+        
+        <div id="contasList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"></div>
+        
+        <div class="cyber-panel p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-['Orbitron'] text-[#00ffff]">Gastos Recorrentes</h3>
+                <button onclick="abrirModalRecorrente()" class="cyber-button px-4 py-2 text-sm">+ ADICIONAR</button>
+            </div>
+            <div id="recorrentesList"></div>
+        </div>
+    </div>
+    
+    <div id="contaModal" class="modal fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="cyber-panel p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-['Orbitron'] text-[#00ffff]">Nova Conta</h3>
+                <button onclick="fecharModalConta()" class="text-[#8a8aaa] hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="contaForm" onsubmit="salvarConta(event)">
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Nome da Conta</label>
+                    <input type="text" id="contaNome" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Tipo</label>
+                    <select id="contaTipo" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white">
+                        <option value="corrente">Conta Corrente</option>
+                        <option value="poupanca">Poupança</option>
+                        <option value="cartao">Cartão de Crédito</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Saldo Inicial (R$)</label>
+                    <input type="number" id="contaSaldo" step="0.01" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <button type="submit" class="cyber-button w-full py-3">CRIAR CONTA</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="recorrenteModal" class="modal fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="cyber-panel p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-['Orbitron'] text-[#00ffff]">Gasto Recorrente</h3>
+                <button onclick="fecharModalRecorrente()" class="text-[#8a8aaa] hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="recorrenteForm" onsubmit="salvarRecorrente(event)">
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Descrição</label>
+                    <input type="text" id="recorrenteDescricao" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Valor (R$)</label>
+                    <input type="number" id="recorrenteValor" step="0.01" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Vencimento (Dia)</label>
+                    <input type="number" id="recorrenteDia" min="1" max="31" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Conta</label>
+                    <select id="recorrenteConta" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white"></select>
+                </div>
+                <button type="submit" class="cyber-button w-full py-3">ADICIONAR</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>NEXUS FINANCE • 3049</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0a0f;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-mobile {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 280px;
+                height: 100vh;
+                z-index: 1000;
+                overflow-y: auto;
+            }
+            .sidebar-mobile.open {
+                transform: translateX(0);
+            }
+            .overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.7);
+                backdrop-filter: blur(5px);
+                z-index: 999;
+            }
+            .overlay.show {
+                display: block;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .menu-toggle-btn {
+                display: flex !important;
+            }
+            iframe {
+                height: calc(100vh - 60px) !important;
+                margin-top: 60px !important;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .menu-toggle-btn {
+                display: none !important;
+            }
+            .sidebar-mobile {
+                transform: translateX(0) !important;
+                position: fixed !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 280px !important;
+                height: 100vh !important;
+            }
+            .main-content {
+                margin-left: 280px !important;
+                width: calc(100% - 280px) !important;
+            }
+            .overlay {
+                display: none !important;
+            }
+            iframe {
+                height: 100vh !important;
+                margin-top: 0 !important;
+            }
+        }
+        
+        .menu-toggle-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 1001;
+            background: rgba(138,43,226,0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid #00ffff;
+            border-radius: 12px;
+            padding: 10px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        iframe {
+            width: 100%;
+            border: none;
+            background: #0a0a0f;
+        }
+        
+        .sidebar-link {
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            padding: 12px 16px !important;
+            border-radius: 12px !important;
+            color: #e0e0ff !important;
+            text-decoration: none !important;
+        }
+        
+        .sidebar-link:hover {
+            background: rgba(138, 43, 226, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-link.active {
+            background: linear-gradient(45deg, #4a0080, #8a2be2);
+            border: 1px solid #00ffff;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            animation: pulse 20s linear infinite;
+            z-index: 0;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="NEXUS Finance">
+<link rel="apple-touch-icon" href="icon-192x192.png">
+<meta name="theme-color" content="#8a2be2">
+    
+    <div class="particles"></div>
+    
+    <!-- Botão Menu Mobile -->
+    <button onclick="toggleSidebar()" class="menu-toggle-btn text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+    </button>
+    
+    <!-- Overlay -->
+    <div id="overlay" class="overlay" onclick="toggleSidebar()"></div>
+    
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar-mobile bg-[rgba(20,20,31,0.98)] backdrop-blur-xl border-r-2 border-[#8a2be2]">
+        <div class="p-5">
+            <div class="text-center mb-6 mt-4">
+                <h1 class="font-['Orbitron'] text-2xl font-bold bg-gradient-to-r from-[#8a2be2] to-[#00ffff] bg-clip-text text-transparent">
+                    NEXUS/FIN
+                </h1>
+                <div class="text-xs text-[#8a8aaa] mt-2">v.3049 • QUANTUM</div>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="dashboard.html" onclick="navegarPara('dashboard.html', this)" class="sidebar-link">
+                    <span class="text-xl">🏠</span>
+                    <span class="font-['Rajdhani'] font-semibold">Dashboard</span>
+                </a>
+                <a href="transacoes.html" onclick="navegarPara('transacoes.html', this)" class="sidebar-link">
+                    <span class="text-xl">💱</span>
+                    <span class="font-['Rajdhani'] font-semibold">Transações</span>
+                </a>
+                <a href="orcamento.html" onclick="navegarPara('orcamento.html', this)" class="sidebar-link">
+                    <span class="text-xl">💰</span>
+                    <span class="font-['Rajdhani'] font-semibold">Orçamento</span>
+                </a>
+                <a href="metas.html" onclick="navegarPara('metas.html', this)" class="sidebar-link">
+                    <span class="text-xl">🎯</span>
+                    <span class="font-['Rajdhani'] font-semibold">Metas</span>
+                </a>
+                <a href="contas.html" onclick="navegarPara('contas.html', this)" class="sidebar-link">
+                    <span class="text-xl">💳</span>
+                    <span class="font-['Rajdhani'] font-semibold">Contas</span>
+                </a>
+                <a href="relatorios.html" onclick="navegarPara('relatorios.html', this)" class="sidebar-link">
+                    <span class="text-xl">📈</span>
+                    <span class="font-['Rajdhani'] font-semibold">Relatórios</span>
+                </a>
+                <a href="configuracoes.html" onclick="navegarPara('configuracoes.html', this)" class="sidebar-link">
+                    <span class="text-xl">⚙️</span>
+                    <span class="font-['Rajdhani'] font-semibold">Config</span>
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-5 left-5 right-5 pt-4 border-t border-[rgba(138,43,226,0.3)]">
+                <div class="text-center text-xs text-[#8a8aaa]">
+                    <span class="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse mr-2"></span>
+                    NEXUS ONLINE
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Main Content -->
+    <main class="main-content transition-all duration-300" style="margin-left: 0;">
+        <iframe id="pageFrame" src="dashboard.html" style="height: 100vh; width: 100%;"></iframe>
+    </main>
+
+    <script>
+        // Função para navegar entre páginas
+        function navegarPara(pagina, elemento) {
+            event.preventDefault();
+            
+            // Carregar a página no iframe
+            const iframe = document.getElementById('pageFrame');
+            iframe.src = pagina;
+            
+            // Atualizar classe ativa no menu
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            elemento.classList.add('active');
+            
+            // Fechar sidebar no mobile
+            if (window.innerWidth <= 768) {
+                toggleSidebar();
+            }
+            
+            // Salvar página atual
+            localStorage.setItem('nexus_current_page', pagina);
+        }
+        
+        // Função para abrir/fechar sidebar no mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+        
+        function closeSidebar() {
+            if (window.innerWidth <= 768) {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            }
+        }
+        
+        // Restaurar última página acessada
+        const ultimaPagina = localStorage.getItem('nexus_current_page');
+        if (ultimaPagina && ultimaPagina !== 'null') {
+            document.getElementById('pageFrame').src = ultimaPagina;
+            // Destacar link correspondente
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                if (link.getAttribute('href') === ultimaPagina) {
+                    link.classList.add('active');
+                }
+            });
+        } else {
+            document.querySelector('.sidebar-link[href="dashboard.html"]').classList.add('active');
+        }
+        
+        // Fechar sidebar ao redimensionar para desktop
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('overlay');
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            }
+        });
+        
+        // Garantir que o iframe recarregue corretamente
+        const iframe = document.getElementById('pageFrame');
+        iframe.addEventListener('load', function() {
+            // Tentar sincronizar dados se necessário
+            console.log('Página carregada:', iframe.src);
+        });
+    </script>
+    
+    <script>
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('✅ Service Worker registrado'))
+            .catch(err => console.log('❌ Erro:', err));
+    }
+</script>
+    
+</body>
+</html>

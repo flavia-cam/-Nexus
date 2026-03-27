@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metas • NEXUS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0a0a0f]">
+    <div class="p-6">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="font-['Orbitron'] text-3xl text-[#00ffff]">Metas Financeiras</h1>
+                <p class="text-[#8a8aaa] mt-2">Planeje seu futuro com metas inteligentes</p>
+            </div>
+            <button onclick="abrirModalMeta()" class="cyber-button px-6 py-3">+ NOVA META</button>
+        </div>
+        <div id="metasList" class="grid grid-cols-1 lg:grid-cols-2 gap-6"></div>
+    </div>
+    
+    <div id="metaModal" class="modal fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="cyber-panel p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-['Orbitron'] text-[#00ffff]">Nova Meta</h3>
+                <button onclick="fecharModalMeta()" class="text-[#8a8aaa] hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="metaForm" onsubmit="salvarMeta(event)">
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Título</label>
+                    <input type="text" id="metaTitulo" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Descrição</label>
+                    <textarea id="metaDescricao" rows="3" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Valor Alvo (R$)</label>
+                    <input type="number" id="metaValorAlvo" step="0.01" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Data Limite</label>
+                    <input type="date" id="metaDataLimite" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-[#8a8aaa] mb-2">Categoria</label>
+                    <select id="metaCategoria" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white">
+                        <option value="geral">Geral</option>
+                        <option value="emergencia">Fundo de Emergência</option>
+                        <option value="viagem">Viagem</option>
+                        <option value="carro">Carro</option>
+                        <option value="casa">Casa</option>
+                        <option value="estudos">Estudos</option>
+                    </select>
+                </div>
+                <div id="planejamentoMensal" class="mb-4 p-3 bg-[rgba(138,43,226,0.1)] rounded-lg hidden">
+                    <p class="text-[#8a8aaa] text-sm">Valor mensal necessário:</p>
+                    <p class="font-['Orbitron'] text-xl text-[#00ffff]" id="valorMensalNecessario">R$ 0,00</p>
+                </div>
+                <button type="submit" class="cyber-button w-full py-3">CRIAR META</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

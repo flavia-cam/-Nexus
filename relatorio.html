@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>NEXUS • RELATÓRIOS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #0a0a0f; 
+            font-family: 'Rajdhani', sans-serif; 
+            color: #e0e0ff;
+            padding: 20px;
+        }
+        .cyber-panel {
+            background: rgba(20, 20, 31, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid #8a2be2;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .cyber-button {
+            background: linear-gradient(45deg, #4a0080, #8a2be2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 12px 24px;
+            transition: all 0.3s;
+        }
+        .cyber-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+        input, select {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #8a2be2;
+            border-radius: 10px;
+            padding: 10px;
+            color: white;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+        }
+        th {
+            color: #00ffff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+        }
+        .text-green { color: #00ff88; }
+        .text-red { color: #ff4444; }
+        .text-cyan { color: #00ffff; }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+            .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+            th, td { padding: 8px; font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-2xl md:text-3xl font-['Orbitron'] text-[#00ffff] mb-4">📊 RELATÓRIOS</h1>
+    
+    <!-- Filtros -->
+    <div class="cyber-panel">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+                <label class="block text-[#8a8aaa] text-sm mb-1">DATA INÍCIO</label>
+                <input type="date" id="dataInicio">
+            </div>
+            <div>
+                <label class="block text-[#8a8aaa] text-sm mb-1">DATA FIM</label>
+                <input type="date" id="dataFim">
+            </div>
+            <div class="flex items-end">
+                <button onclick="gerarRelatorio()" class="cyber-button w-full">GERAR RELATÓRIO</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cards Resumo -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div class="cyber-panel text-center">
+            <p class="text-[#8a8aaa] text-sm">💰 RECEITAS</p>
+            <p class="text-xl md:text-2xl font-['Orbitron'] text-green-400" id="totalReceitas">R$ 0,00</p>
+        </div>
+        <div class="cyber-panel text-center">
+            <p class="text-[#8a8aaa] text-sm">💸 DESPESAS</p>
+            <p class="text-xl md:text-2xl font-['Orbitron'] text-red-400" id="totalDespesas">R$ 0,00</p>
+        </div>
+        <div class="cyber-panel text-center">
+            <p class="text-[#8a8aaa] text-sm">⚖️ SALDO</p>
+            <p class="text-xl md:text-2xl font-['Orbitron'] text-cyan-400" id="totalSaldo">R$ 0,00</p>
+        </div>
+        <div class="cyber-panel text-center">
+            <p class="text-[#8a8aaa] text-sm">📋 TRANSAÇÕES</p>
+            <p class="text-xl md:text-2xl font-['Orbitron'] text-[#8a2be2]" id="totalTransacoes">0</p>
+        </div>
+    </div>
+    
+    <!-- Gráficos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="cyber-panel">
+            <h3 class="font-['Orbitron'] text-[#00ffff] mb-3">📈 EVOLUÇÃO MENSAL</h3>
+            <canvas id="graficoEvolucao" height="250"></canvas>
+        </div>
+        <div class="cyber-panel">
+            <h3 class="font-['Orbitron'] text-[#00ffff] mb-3">🥧 DESPESAS POR CATEGORIA</h3>
+            <canvas id="graficoCategorias" height="250"></canvas>
+        </div>
+    </div>
+    
+    <!-- Tabela -->
+    <div class="cyber-panel">
+        <h3 class="font-['Orbitron'] text-[#00ffff] mb-3">📋 DETALHAMENTO</h3>
+        <div class="overflow-x-auto">
+            <table>
+                <thead>
+                    <tr>
+                        <th>CATEGORIA</th>
+                        <th class="text-right">RECEITAS</th>
+                        <th class="text-right">DESPESAS</th>
+                        <th class="text-right">SALDO</th>
+                        <th class="text-right">%</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaDetalhes"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // RELATÓRIOS - VERSÃO SIMPLES E FUNCIONAL
+        // ============================================
+        
+        let graficoEvolucao = null;
+        let graficoCategorias = null;
+        
+        function formatarMoeda(v) {
+            return v.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+        }
+        
+        function getTransacoes() {
+            try {
+                const dados = localStorage.getItem('nexus_transactions');
+                return dados ? JSON.parse(dados) : [];
+            } catch(e) {
+                return [];
+            }
+        }
+        
+        function getCategorias() {
+            try {
+                const dados = localStorage.getItem('nexus_categories');
+                return dados ? JSON.parse(dados) : [];
+            } catch(e) {
+                return [];
+            }
+        }
+        
+        function gerarRelatorio() {
+            const inicio = document.getElementById('dataInicio').value;
+            const fim = document.getElementById('dataFim').value;
+            
+            if (!inicio || !fim) {
+                alert('Selecione as datas!');
+                return;
+            }
+            
+            const todasTransacoes = getTransacoes();
+            const categorias = getCategorias();
+            
+            // Filtrar
+            const transacoes = todasTransacoes.filter(t => t.data >= inicio && t.data <= fim);
+            
+            // Totais
+            const receitas = transacoes.filter(t => t.tipo === 'receita').reduce((a, b) => a + b.valor, 0);
+            const despesas = transacoes.filter(t => t.tipo === 'despesa').reduce((a, b) => a + b.valor, 0);
+            const saldo = receitas - despesas;
+            
+            document.getElementById('totalReceitas').textContent = formatarMoeda(receitas);
+            document.getElementById('totalDespesas').textContent = formatarMoeda(despesas);
+            document.getElementById('totalSaldo').textContent = formatarMoeda(saldo);
+            document.getElementById('totalTransacoes').textContent = transacoes.length;
+            
+            // Gráfico de evolução mensal
+            const meses = {};
+            transacoes.forEach(t => {
+                const mes = t.data.substring(0, 7);
+                if (!meses[mes]) meses[mes] = { receitas: 0, despesas: 0 };
+                if (t.tipo === 'receita') meses[mes].receitas += t.valor;
+                else meses[mes].despesas += t.valor;
+            });
+            
+            const mesesOrdenados = Object.keys(meses).sort();
+            const labels = mesesOrdenados.map(m => m.split('-')[1] + '/' + m.split('-')[0]);
+            const receitasMes = mesesOrdenados.map(m => meses[m].receitas);
+            const despesasMes = mesesOrdenados.map(m => meses[m].despesas);
+            
+            if (graficoEvolucao) graficoEvolucao.destroy();
+            graficoEvolucao = new Chart(document.getElementById('graficoEvolucao'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Receitas', data: receitasMes, backgroundColor: 'rgba(0,255,255,0.7)', borderRadius: 8 },
+                        { label: 'Despesas', data: despesasMes, backgroundColor: 'rgba(255,0,255,0.7)', borderRadius: 8 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { labels: { color: '#e0e0ff' } } },
+                    scales: {
+                        y: { ticks: { color: '#e0e0ff', callback: v => formatarMoeda(v) }, grid: { color: 'rgba(138,43,226,0.2)' } },
+                        x: { ticks: { color: '#e0e0ff' }, grid: { display: false } }
+                    }
+                }
+            });
+            
+            // Gráfico de categorias
+            const despesasCat = {};
+            transacoes.filter(t => t.tipo === 'despesa').forEach(t => {
+                despesasCat[t.categoria] = (despesasCat[t.categoria] || 0) + t.valor;
+            });
+            
+            const cats = Object.keys(despesasCat);
+            const valores = cats.map(c => despesasCat[c]);
+            const cores = cats.map(c => {
+                const cat = categorias.find(cat => cat.nome === c);
+                return cat ? cat.cor : '#8a2be2';
+            });
+            
+            if (graficoCategorias) graficoCategorias.destroy();
+            graficoCategorias = new Chart(document.getElementById('graficoCategorias'), {
+                type: 'doughnut',
+                data: {
+                    labels: cats,
+                    datasets: [{ data: valores, backgroundColor: cores, borderWidth: 2, borderColor: '#fff' }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#e0e0ff', font: { size: 10 } } },
+                        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${formatarMoeda(ctx.raw)} (${((ctx.raw / valores.reduce((a,b)=>a+b,0))*100).toFixed(1)}%)` } }
+                    }
+                }
+            });
+            
+            // Tabela
+            const categoriasUnicas = {};
+            transacoes.forEach(t => {
+                if (!categoriasUnicas[t.categoria]) categoriasUnicas[t.categoria] = { receitas: 0, despesas: 0 };
+                if (t.tipo === 'receita') categoriasUnicas[t.categoria].receitas += t.valor;
+                else categoriasUnicas[t.categoria].despesas += t.valor;
+            });
+            
+            const totalGeral = receitas + despesas;
+            const tbody = document.getElementById('tabelaDetalhes');
+            const catsLista = Object.keys(categoriasUnicas).sort();
+            
+            if (catsLista.length === 0) {
+                tbody.innerHTML = '.<td colspan="5" class="text-center py-8">Nenhum dado no período</td></tr>';
+            } else {
+                tbody.innerHTML = catsLista.map(c => {
+                    const r = categoriasUnicas[c].receitas;
+                    const d = categoriasUnicas[c].despesas;
+                    const s = r - d;
+                    const p = totalGeral > 0 ? ((d / totalGeral) * 100).toFixed(1) : 0;
+                    return `<tr><td>${c}</td><td class="text-right text-green-400">${formatarMoeda(r)}</td><td class="text-right text-red-400">${formatarMoeda(d)}</td><td class="text-right ${s>=0?'text-green-400':'text-red-400'}">${formatarMoeda(s)}</td><td class="text-right">${p}%</td></tr>`;
+                }).join('');
+            }
+        }
+        
+        // Datas padrão
+        const hoje = new Date();
+        const primeiroDia = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+        document.getElementById('dataInicio').value = primeiroDia.toISOString().split('T')[0];
+        document.getElementById('dataFim').value = hoje.toISOString().split('T')[0];
+        
+        // Gerar ao carregar
+        setTimeout(gerarRelatorio, 100);
+    </script>
+</body>
+</html>

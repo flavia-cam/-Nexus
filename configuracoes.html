@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações • NEXUS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#0a0a0f]">
+    <div class="p-6">
+        <h1 class="font-['Orbitron'] text-3xl text-[#00ffff] mb-6">Configurações</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="cyber-panel p-6">
+                <h3 class="font-['Orbitron'] text-[#00ffff] mb-4">Perfil</h3>
+                <div class="mb-4"><label class="block text-[#8a8aaa] mb-2">Nome</label><input type="text" id="perfilNome" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white"></div>
+                <div class="mb-4"><label class="block text-[#8a8aaa] mb-2">Email</label><input type="email" id="perfilEmail" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white"></div>
+                <button onclick="salvarPerfil()" class="cyber-button w-full py-3">SALVAR PERFIL</button>
+            </div>
+            
+            <div class="cyber-panel p-6">
+                <div class="flex justify-between items-center mb-4"><h3 class="font-['Orbitron'] text-[#00ffff]">Categorias</h3><button onclick="abrirModalCategoria()" class="cyber-button px-4 py-2 text-sm">+ NOVA</button></div>
+                <div id="categoriasList" class="space-y-2"></div>
+            </div>
+            
+            <div class="cyber-panel p-6">
+                <h3 class="font-['Orbitron'] text-[#00ffff] mb-4">Tema</h3>
+                <div class="flex gap-3"><button onclick="mudarTema('dark')" class="px-4 py-2 border-2 border-[#8a2be2] rounded-lg hover:bg-[#8a2be2]">Dark</button><button onclick="mudarTema('purple')" class="px-4 py-2 border-2 border-[#8a2be2] rounded-lg hover:bg-[#8a2be2]">Purple</button><button onclick="mudarTema('cyan')" class="px-4 py-2 border-2 border-[#8a2be2] rounded-lg hover:bg-[#8a2be2]">Cyan</button></div>
+            </div>
+            
+            <div class="cyber-panel p-6">
+                <h3 class="font-['Orbitron'] text-[#00ffff] mb-4">Gerenciar Dados</h3>
+                <div class="space-y-3"><button onclick="exportarDados()" class="cyber-button w-full py-2">📤 Exportar Dados</button><button onclick="importarDados()" class="cyber-button w-full py-2">📥 Importar Dados</button><button onclick="limparDados()" class="cyber-button w-full py-2 bg-red-600 hover:bg-red-700">⚠️ Limpar Todos os Dados</button></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="categoriaModal" class="modal fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="cyber-panel p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4"><h3 class="font-['Orbitron'] text-[#00ffff]">Nova Categoria</h3><button onclick="fecharModalCategoria()" class="text-[#8a8aaa] hover:text-white text-2xl">&times;</button></div>
+            <form id="categoriaForm" onsubmit="salvarCategoria(event)">
+                <div class="mb-4"><label class="block text-[#8a8aaa] mb-2">Nome</label><input type="text" id="categoriaNome" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white" required></div>
+                <div class="mb-4"><label class="block text-[#8a8aaa] mb-2">Cor</label><input type="color" id="categoriaCor" value="#8a2be2" class="w-full h-12 bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg"></div>
+                <div class="mb-4"><label class="block text-[#8a8aaa] mb-2">Tipo</label><select id="categoriaTipo" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white"><option value="ambos">Ambos</option><option value="receita">Receita</option><option value="despesa">Despesa</option></select></div>
+                <button type="submit" class="cyber-button w-full py-3">CRIAR CATEGORIA</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

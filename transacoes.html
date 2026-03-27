@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Transações • NEXUS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        @media (max-width: 768px) {
+            .flex.justify-between {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .flex.justify-between button {
+                width: 100%;
+            }
+            .grid-cols-1.md\\:grid-cols-4 {
+                grid-template-columns: 1fr !important;
+            }
+            .cyber-panel.p-6 {
+                padding: 1rem !important;
+            }
+            .acao-btn {
+                padding: 6px 10px !important;
+                font-size: 11px !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#0a0a0f]">
+    <div class="p-4 md:p-6">
+        <div class="flex justify-between items-center mb-4 md:mb-6 flex-col md:flex-row gap-3">
+            <div class="w-full md:w-auto">
+                <h1 class="font-['Orbitron'] text-2xl md:text-3xl text-[#00ffff]">Transações</h1>
+                <p class="text-[#8a8aaa] text-sm md:text-base mt-1">Gerencie todas as suas movimentações</p>
+            </div>
+            <button onclick="abrirModalTransacao()" class="cyber-button px-4 md:px-6 py-2 md:py-3 text-sm md:text-base w-full md:w-auto">+ NOVA TRANSAÇÃO</button>
+        </div>
+        
+        <div class="cyber-panel p-4 md:p-6 mb-4 md:mb-6">
+            <div class="grid grid-cols-1 gap-3">
+                <input type="text" id="filtroBusca" placeholder="Buscar..." class="bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm">
+                <select id="filtroCategoria" class="bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm"></select>
+                <select id="filtroTipo" class="bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm">
+                    <option value="">Todos os tipos</option>
+                    <option value="receita">Receitas</option>
+                    <option value="despesa">Despesas</option>
+                </select>
+                <select id="filtroConta" class="bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm"></select>
+            </div>
+        </div>
+        
+        <div class="cyber-panel p-4 md:p-6">
+            <div class="table-container overflow-x-auto">
+                <table class="w-full min-w-[500px]">
+                    <thead>
+                        <tr class="border-b border-[rgba(138,43,226,0.3)]">
+                            <th class="text-left py-2 md:py-3 text-xs md:text-sm">Data</th>
+                            <th class="text-left py-2 md:py-3 text-xs md:text-sm">Descrição</th>
+                            <th class="text-left py-2 md:py-3 text-xs md:text-sm">Categoria</th>
+                            <th class="text-left py-2 md:py-3 text-xs md:text-sm hidden md:table-cell">Conta</th>
+                            <th class="text-right py-2 md:py-3 text-xs md:text-sm">Valor</th>
+                            <th class="text-center py-2 md:py-3 text-xs md:text-sm">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transacoesList"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal (mesmo código anterior, apenas adicionar classes responsivas) -->
+    <div id="transacaoModal" class="modal fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="cyber-panel p-5 md:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-['Orbitron'] text-lg md:text-xl text-[#00ffff]" id="modalTitle">Nova Transação</h3>
+                <button onclick="fecharModalTransacao()" class="text-[#8a8aaa] hover:text-white text-2xl">&times;</button>
+            </div>
+            <form id="transacaoForm" onsubmit="salvarTransacao(event)">
+                <div class="mb-3 md:mb-4">
+                    <label class="block text-[#8a8aaa] text-sm mb-2">Descrição</label>
+                    <input type="text" id="transacaoDescricao" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm" required>
+                </div>
+                <div class="mb-3 md:mb-4">
+                    <label class="block text-[#8a8aaa] text-sm mb-2">Valor (R$)</label>
+                    <input type="number" id="transacaoValor" step="0.01" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm" required>
+                </div>
+                <div class="mb-3 md:mb-4">
+                    <label class="block text-[#8a8aaa] text-sm mb-2">Tipo</label>
+                    <div class="flex gap-3">
+                        <label class="flex items-center gap-2"><input type="radio" name="transacaoTipo" value="receita" checked> <span class="text-sm">Receita</span></label>
+                        <label class="flex items-center gap-2"><input type="radio" name="transacaoTipo" value="despesa"> <span class="text-sm">Despesa</span></label>
+                    </div>
+                </div>
+                <div class="mb-3 md:mb-4">
+                    <label class="block text-[#8a8aaa] text-sm mb-2">Categoria</label>
+                    <select id="transacaoCategoria" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm" required></select>
+                </div>
+                <div class="mb-3 md:mb-4">
+                    <label class="block text-[#8a8aaa] text-sm mb-2">Conta</label>
+                    <select id="transacaoConta" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm" required></select>
+                </div>
+                <div class="mb-4 md:mb-6">
+                    <label class="block text-[#8a8aaa] text-sm mb-2">Data</label>
+                    <input type="date" id="transacaoData" class="w-full bg-[rgba(0,0,0,0.5)] border-2 border-[#8a2be2] rounded-lg p-3 text-white text-sm" required>
+                </div>
+                <button type="submit" class="cyber-button w-full py-3 text-sm md:text-base">SALVAR TRANSAÇÃO</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
